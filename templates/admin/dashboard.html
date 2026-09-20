@@ -171,7 +171,7 @@
 }
 
 .fullscreen-mode {
-    padding: 0 !important;
+    padding: 20px !important;
 }
 
 .fullscreen-mode .container-fluid {
@@ -180,8 +180,10 @@
 
 .fullscreen-mode .card {
     border: none !important;
-    border-radius: 0 !important;
-    height: 100vh !important;
+    border-radius: 12px !important;
+    height: auto !important;
+    max-height: calc(100vh - 40px) !important;
+    overflow-y: auto !important;
 }
 
 .fullscreen-mode .card-body {
@@ -191,18 +193,35 @@
 
 <script>
 let isFullscreen = false;
+let autoRefreshInterval;
 
 // Full-screen toggle
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
         isFullscreen = true;
+        // Stop auto-refresh in full-screen mode
+        if (autoRefreshInterval) {
+            clearInterval(autoRefreshInterval);
+        }
     } else {
         if (document.exitFullscreen) {
             document.exitFullscreen();
             isFullscreen = false;
+            // Resume auto-refresh when exiting full-screen
+            startAutoRefresh();
         }
     }
+}
+
+// Start auto-refresh
+function startAutoRefresh() {
+    if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+    }
+    autoRefreshInterval = setInterval(function() {
+        location.reload();
+    }, 5000);
 }
 
 // Listen for fullscreen change
@@ -214,16 +233,20 @@ document.addEventListener('fullscreenchange', function() {
         isFullscreen = true;
         icon.textContent = '⛶';
         dashboard.classList.add('fullscreen-mode');
+        // Stop auto-refresh in full-screen mode
+        if (autoRefreshInterval) {
+            clearInterval(autoRefreshInterval);
+        }
     } else {
         isFullscreen = false;
         icon.textContent = '⛶';
         dashboard.classList.remove('fullscreen-mode');
+        // Resume auto-refresh when exiting full-screen
+        startAutoRefresh();
     }
 });
 
-// Auto-refresh every 5 seconds for live updates
-setInterval(function() {
-    location.reload();
-}, 5000);
+// Start auto-refresh on page load
+startAutoRefresh();
 </script>
 {% endblock %}
