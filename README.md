@@ -1,31 +1,58 @@
-# PrePlate - Restaurant Pre-order Platform
+# PrePlate - Restaurant Order, Kitchen & Sales Management System
 
-**Order Ahead. Pick Up Fresh.**
+**Restaurant Operations System for Efficient Order Management**
 
-A complete, professional restaurant and café food pre-order web application that allows customers to browse menus, place orders in advance, and track order status. Restaurant staff can manage menus, orders, and view sales analytics.
+A complete internal restaurant management system where staff (not customers) manage orders. Reception staff enter customer orders, kitchen staff prepare food, and customers collect from the counter. Features real-time dashboards, stock management, and public order status display.
 
 ## 🌟 Features
 
-### Customer Features
-- **User Registration & Authentication** - Secure sign-up and login with password hashing
-- **Menu Browsing** - View all food items with images, descriptions, and prices
-- **Advanced Search & Filtering** - Search by name/description, filter by category and availability
-- **Food Details** - Detailed view of each food item with quantity selection
-- **Shopping Cart** - Add items, adjust quantities, remove items, view totals
-- **Smart Checkout** - Select pickup date and time with validation
-- **Order Confirmation** - Instant confirmation with order ID and details
-- **Order Tracking** - Real-time status tracking (Pending → Accepted → Preparing → Ready → Completed)
-- **Order History** - View all past and current orders with status
-- **Responsive Design** - Works seamlessly on desktop, tablet, and mobile
+### Staff Roles & Access
+- **Admin/Owner** - Full control over menu, staff, orders, and sales
+- **Reception/Cashier** - Create orders, manage customer pickups, complete orders
+- **Kitchen Staff** - View order queue, update preparation status, mark orders ready
+
+### Reception Features
+- **Quick Order Entry** - Search and filter food items for fast order creation
+- **Stock Validation** - Automatic stock checking before order confirmation
+- **Customer Management** - Enter customer name and table number
+- **Order Tracking** - View all orders and their current status
+- **Real-time Updates** - Dashboard auto-refreshes every 5 seconds
+
+### Kitchen Features
+- **Order Queue** - View pending and preparing orders
+- **Status Management** - Update order status (Pending → Preparing → Ready)
+- **Preparation Time Tracking** - See estimated prep time for each order
+- **Real-time Updates** - Dashboard auto-refreshes every 5 seconds
+- **Order Details** - View complete order information
 
 ### Admin Features
-- **Professional Dashboard** - Real-time statistics and metrics
-- **Order Management** - View, search, filter, and manage all orders
-- **Status Updates** - Update order status with visual workflow
-- **Menu Management** - Add, edit, delete, and enable/disable food items
-- **Category Management** - Create and manage food categories
-- **Sales Reports** - Daily sales, order statistics, popular items
-- **Analytics** - Orders by status, completion rates, revenue tracking
+- **Professional Dashboard** - Today's orders, sales, stock statistics
+- **Menu Management** - Add, edit, delete food items with stock and prep time
+- **Category Management** - Organize food items by category
+- **Stock Management** - Monitor and update stock quantities
+- **Staff Management** - Add/remove staff accounts, manage roles
+- **Sales Reports** - Daily sales, popular items, revenue tracking
+- **Order Management** - View all orders, filter by status/date
+
+### Public Display Features
+- **Customer-Facing Dashboard** - Shows active orders on restaurant screen
+- **Real-Time Status** - Auto-refreshes every 10 seconds
+- **Order Priority** - Ready orders shown first for customer attention
+- **Ready Notifications** - "🎉 Ready! Collect from counter" message
+- **8-Order Limit** - Shows 8 orders at a time (4 per row) for clean display
+- **Auto-Removal** - Orders disappear when completed/collected
+
+### Inventory & Stock
+- **Stock Tracking** - Automatic stock reduction on order confirmation
+- **Out of Stock Prevention** - Blocks orders when stock is zero
+- **Stock Alerts** - Visual indicators for low stock items
+- **Preparation Time** - Set prep time for each menu item
+
+### Real-Time Features
+- **Auto-Refresh Dashboards** - Staff dashboards refresh every 5 seconds
+- **Public Display Auto-Refresh** - Customer display refreshes every 10 seconds
+- **Instant Order Visibility** - New orders appear immediately on kitchen dashboard
+- **Live Status Updates** - Order status changes show instantly across all dashboards
 
 ## 🛠 Technology Stack
 
@@ -33,15 +60,15 @@ A complete, professional restaurant and café food pre-order web application tha
 - **HTML5** - Semantic markup
 - **CSS3** - Modern styling with custom design
 - **Bootstrap 5** - Responsive UI framework
-- **Vanilla JavaScript** - Dynamic interactions
+- **Vanilla JavaScript** - Dynamic interactions and auto-refresh
 
 ### Backend
 - **Python 3.x** - Core programming language
-- **Flask** - Web framework
+- **Flask 3.0.0** - Web framework
 - **Werkzeug** - Password hashing and security
 
 ### Database
-- **MySQL** - Relational database management
+- **MySQL 8.0+** - Relational database management
 - **mysql-connector-python** - Python MySQL driver
 
 ### Additional Libraries
@@ -59,33 +86,38 @@ PrePlate/
 ├── .env.example               # Environment variables template
 │
 ├── database/
-│   └── schema.sql             # Database schema and seed data
+│   ├── schema.sql             # Database schema
+│   └── reset_database.sql     # Fresh database reset script
 │
 ├── templates/
 │   ├── base.html              # Base template with navigation
-│   ├── index.html             # Home page
 │   ├── login.html             # Login page
-│   ├── register.html          # Registration page
-│   ├── menu.html              # Menu browsing page
-│   ├── food_details.html      # Food item details
-│   ├── cart.html              # Shopping cart
-│   ├── checkout.html          # Checkout page
-│   ├── order_confirmation.html # Order confirmation
-│   ├── my_orders.html         # Customer order history
-│   ├── order_details.html     # Order details and tracking
+│   ├── public_dashboard.html   # Public order status display
 │   ├── 404.html               # 404 error page
 │   ├── 500.html               # 500 error page
 │   │
-│   └── admin/
-│       ├── base.html          # Admin base template
-│       ├── dashboard.html     # Admin dashboard
-│       ├── orders.html        # Order management
-│       ├── order_details.html # Order details and status update
-│       ├── menu.html          # Menu management
-│       ├── add_food.html      # Add new food item
-│       ├── edit_food.html     # Edit food item
-│       ├── categories.html    # Category management
-│       └── reports.html       # Sales reports and analytics
+│   ├── admin/                  # Admin templates
+│   │   ├── base.html          # Admin base template
+│   │   ├── dashboard.html     # Admin dashboard
+│   │   ├── orders.html        # Order management
+│   │   ├── order_details.html # Order details
+│   │   ├── menu.html          # Menu management
+│   │   ├── add_food.html      # Add new food item
+│   │   ├── edit_food.html     # Edit food item
+│   │   ├── categories.html    # Category management
+│   │   ├── reports.html       # Sales reports
+│   │   └── staff.html        # Staff management
+│   │
+│   ├── reception/             # Reception staff templates
+│   │   ├── dashboard.html     # Reception dashboard
+│   │   ├── new_order.html    # Create new order
+│   │   ├── orders.html        # View all orders
+│   │   └── order_details.html # Order details
+│   │
+│   └── kitchen/               # Kitchen staff templates
+│       ├── dashboard.html     # Kitchen dashboard
+│       ├── orders.html        # Kitchen order queue
+│       └── order_details.html # Order details with status update
 │
 ├── static/
 │   ├── css/
@@ -104,7 +136,7 @@ PrePlate/
 ### Tables
 
 #### `users`
-- User accounts with roles (customer/admin)
+- Staff accounts with roles (admin, reception, kitchen)
 - Password hashing for security
 - Email uniqueness constraint
 
@@ -114,19 +146,28 @@ PrePlate/
 
 #### `food_items`
 - Menu items with details
-- Category foreign key
+- Stock quantity tracking
+- Preparation time in minutes
 - Availability status
+- Category foreign key
 - Image references
 
 #### `orders`
-- Customer orders with pickup scheduling
-- Status tracking
-- Financial calculations (subtotal, tax, total)
+- Customer orders with customer name and table number
+- Status tracking (Pending → Preparing → Ready → Completed)
+- Financial calculations (subtotal, total)
+- Estimated preparation time
+- Created by staff member
 
 #### `order_items`
 - Individual items in each order
-- Quantity and price at time of order
+- Quantity and price at time of order (price snapshot)
 - Foreign key relationships
+
+#### `daily_sales`
+- Daily sales aggregation
+- Total orders, completed orders, items sold
+- Total revenue tracking
 
 ### Relationships
 ```
@@ -137,12 +178,13 @@ users (1:N) → orders (1:N) → order_items (N:1) → food_items (N:1) → cate
 
 ### Prerequisites
 - Python 3.7 or higher
-- MySQL 5.7 or higher
+- MySQL 8.0 or higher
 - pip (Python package manager)
 
-### Step 1: Clone or Download the Project
+### Step 1: Clone the Repository
 ```bash
-cd "C:\PROJECTS\PrePlate Canteen App"
+git clone https://github.com/SujalPardhi/PrePlate-Restaurant-Management-System.git
+cd PrePlate-Restaurant-Management-System
 ```
 
 ### Step 2: Create Virtual Environment (Recommended)
@@ -160,20 +202,27 @@ pip install -r requirements.txt
 ### Step 4: Configure MySQL Database
 
 #### 4.1 Create MySQL Database
+Open MySQL Workbench or MySQL Command Line and run:
 ```sql
 CREATE DATABASE preplate_db;
 ```
 
-#### 4.2 Import Schema
+#### 4.2 Import Schema (Fresh Setup)
+For a fresh installation, run the reset script:
 ```bash
-mysql -u root -p preplate_db < database/schema.sql
+mysql -u root -p < database/reset_database.sql
 ```
 
-Or run manually in MySQL:
-```sql
-USE preplate_db;
-source C:/PROJECTS/PrePlate Canteen App/database/schema.sql;
-```
+Or manually in MySQL Workbench:
+1. Open `database/reset_database.sql`
+2. Copy all SQL
+3. Paste in MySQL Workbench query window
+4. Execute (lightning bolt icon)
+
+This will create a fresh database with:
+- 3 staff accounts (admin, reception, kitchen)
+- 8 food categories
+- 24 sample food items with stock and prep times
 
 ### Step 5: Configure Environment Variables
 
@@ -191,16 +240,7 @@ DB_PASSWORD=your_mysql_password
 DB_NAME=preplate_db
 ```
 
-### Step 6: Setup Admin Password
-
-Run the setup script to properly hash the admin password:
-```bash
-python setup_admin.py
-```
-
-This will update the admin password in the database with proper security hashing.
-
-### Step 7: Run the Application
+### Step 6: Run the Application
 
 ```bash
 python app.py
@@ -214,91 +254,138 @@ The application will start on `http://127.0.0.1:5000`
 - **Email:** admin@preplate.com
 - **Password:** Admin@123
 
-**Important:** Change the default admin password after first login for security.
+### Reception Staff
+- **Email:** reception@preplate.com
+- **Password:** Admin@123
 
-### Customer Account
-Register a new customer account through the registration page.
+### Kitchen Staff
+- **Email:** kitchen@preplate.com
+- **Password:** Admin@123
+
+**Important:** Change default passwords after first login for security.
 
 ## 📱 Usage Guide
 
-### Customer Workflow
+### Restaurant Workflow
 
-1. **Register/Login** - Create account or login with existing credentials
-2. **Browse Menu** - Explore food items, use search and filters
-3. **View Details** - Click on items to see full details
-4. **Add to Cart** - Select quantity and add items to cart
-5. **Review Cart** - Adjust quantities, remove items, view totals
-6. **Checkout** - Select pickup date and time
-7. **Place Order** - Confirm order and receive order ID
-8. **Track Order** - Monitor order status in real-time
-9. **View History** - Access all past orders
+1. **Reception/Cashier** creates order:
+   - Login as reception staff
+   - Go to "New Order"
+   - Enter customer name and table number
+   - Search/filter food items
+   - Select items and quantities
+   - Confirm order
+   - Stock automatically reduces
 
-### Admin Workflow
+2. **Kitchen** receives order:
+   - Order appears automatically on kitchen dashboard (5s refresh)
+   - Kitchen sees order details and prep time
+   - Kitchen updates status to "Preparing"
+   - Kitchen updates status to "Ready"
 
-1. **Login** - Access admin dashboard with admin credentials
-2. **View Dashboard** - Monitor today's statistics and recent orders
-3. **Manage Orders** - View, filter, and update order statuses
-4. **Update Status** - Change order status through the workflow
-5. **Manage Menu** - Add, edit, delete, or toggle food item availability
-6. **Manage Categories** - Create and organize food categories
-7. **View Reports** - Analyze sales data and popular items
+3. **Customer** sees status:
+   - Public dashboard shows order status (10s refresh)
+   - When "Ready", message shows: "🎉 Ready! Collect from counter"
+   - Customer goes to counter to collect
+
+4. **Reception** completes order:
+   - Order marked "Ready" appears on reception dashboard
+   - Customer collects order
+   - Reception marks order "Completed"
+   - Order removed from public display
+   - Sales data updated automatically
+
+### Staff Dashboards
+
+#### Reception Dashboard
+- View pending and ready orders
+- Create new orders
+- Track order status
+- Complete orders when customer collects
+
+#### Kitchen Dashboard
+- View pending orders queue
+- Update preparation status
+- Mark orders ready
+- Auto-refreshes every 5 seconds
+
+#### Admin Dashboard
+- View all statistics
+- Manage menu and stock
+- Manage staff accounts
+- View sales reports
+- Access all system features
+
+### Public Display Screen
+For restaurant TV/customer display:
+- Open: http://127.0.0.1:5000/public
+- Press F11 for full-screen mode
+- Shows 8 orders at a time (4 per row)
+- Auto-refreshes every 10 seconds
+- Orders disappear when completed
 
 ## 🎨 Design Principles
 
 - **Professional & Clean** - Business-oriented, minimal design
-- **Modern UI** - Contemporary aesthetics with smooth interactions
-- **Responsive** - Optimized for all screen sizes
-- **Accessible** - High contrast, clear typography
-- **Fast Performance** - Optimized loading and interactions
-- **User-Friendly** - Intuitive navigation and workflows
+- **Restaurant-Focused** - Optimized for restaurant operations
+- **High Visibility** - Large text for display screens
+- **Color-Coded Status** - Yellow (Pending), Blue (Preparing), Green (Ready)
+- **Fast Performance** - Auto-refresh without full page reload where possible
+- **Intuitive** - Easy for staff to use during busy hours
 
 ## 🔒 Security Features
 
 - **Password Hashing** - Uses Werkzeug's secure password hashing
 - **SQL Injection Prevention** - Parameterized queries throughout
 - **Session Management** - Secure Flask session handling
-- **Role-Based Access** - Admin-only routes protected
+- **Role-Based Access** - Staff roles protected (admin, reception, kitchen)
 - **Input Validation** - Server-side validation on all forms
-- **CSRF Protection** - Built-in Flask CSRF protection
-- **User Isolation** - Customers can only access their own orders
+- **Transaction Safety** - Database transactions for order creation and stock updates
+- **Stock Validation** - Prevents overselling with stock checks
 
 ## 🧪 Testing
 
 ### Manual Testing Checklist
 
-#### Customer Flow
-- [ ] Register new customer account
-- [ ] Login with customer credentials
-- [ ] Browse menu items
-- [ ] Search for specific food
-- [ ] Filter by category
-- [ ] View food details
-- [ ] Add item to cart
-- [ ] Adjust cart quantities
-- [ ] Remove item from cart
-- [ ] Proceed to checkout
-- [ ] Select pickup time
-- [ ] Place order successfully
-- [ ] View order confirmation
-- [ ] Track order status
-- [ ] View order history
-- [ ] Logout
+#### Reception Flow
+- [ ] Login as reception staff
+- [ ] Create new order with customer name
+- [ ] Search and filter food items
+- [ ] Select multiple items with quantities
+- [ ] Confirm order successfully
+- [ ] Verify stock reduced
+- [ ] View order in orders list
+- [ ] See order status updates
+- [ ] Complete order when customer collects
+
+#### Kitchen Flow
+- [ ] Login as kitchen staff
+- [ ] View pending orders on dashboard
+- [ ] See new orders appear automatically
+- [ ] Update order status to "Preparing"
+- [ ] Update order status to "Ready"
+- [ ] View order details
+- [ ] Auto-refresh works (5 seconds)
 
 #### Admin Flow
-- [ ] Login with admin credentials
+- [ ] Login as admin
 - [ ] View dashboard statistics
-- [ ] View recent orders
-- [ ] Filter orders by status
-- [ ] Search for specific order
-- [ ] View order details
-- [ ] Update order status
-- [ ] Add new food item
+- [ ] Add new food item with stock and prep time
 - [ ] Edit existing food item
-- [ ] Toggle food availability
-- [ ] Add new category
+- [ ] Update stock quantity
+- [ ] Add reception staff account
+- [ ] Add kitchen staff account
 - [ ] View sales reports
 - [ ] View popular items
-- [ ] Logout
+- [ ] Manage categories
+
+#### Public Display Flow
+- [ ] Open public dashboard on browser
+- [ ] See active orders (max 8)
+- [ ] See order status changes (10s refresh)
+- [ ] See "Ready" message when order is ready
+- [ ] See order disappear when completed
+- [ ] Verify 4 orders per row layout
 
 ## 🐛 Troubleshooting
 
@@ -323,43 +410,53 @@ if __name__ == '__main__':
 pip install -r requirements.txt --force-reinstall
 ```
 
-### Password Hash Issues
-```bash
-# Re-run admin setup
-python setup_admin.py
-```
+### Login Issues
+- Ensure database was created with reset_database.sql
+- Verify default credentials are correct
+- Check .env file has correct MySQL credentials
+
+### Order Creation Error
+- Check if food items have stock > 0
+- Verify database schema is updated
+- Check MySQL connection
+
+### Public Display Not Updating
+- Ensure JavaScript is enabled in browser
+- Check auto-refresh script is loading
+- Verify database has active orders
 
 ## 📊 SQL Operations Demonstrated
 
 The project demonstrates comprehensive SQL operations:
-- **INSERT** - Adding users, orders, food items
-- **SELECT** - Retrieving data with complex queries
-- **UPDATE** - Modifying order status, food availability
-- **DELETE** - Removing items (with safety checks)
-- **WHERE** - Conditional filtering
-- **ORDER BY** - Sorting results
-- **GROUP BY** - Aggregation for reports
-- **COUNT** - Counting records
-- **SUM** - Calculating totals
-- **JOIN** - Table relationships (INNER JOIN)
+- **INSERT** - Adding orders, food items, staff accounts
+- **SELECT** - Retrieving data with complex queries and joins
+- **UPDATE** - Modifying order status, stock quantities
+- **DELETE** - Removing staff (with safety checks)
+- **WHERE** - Conditional filtering by status, date, etc.
+- **ORDER BY** - Sorting by priority (Ready → Preparing → Pending)
+- **GROUP BY** - Aggregation for sales reports
+- **COUNT** - Counting orders and items
+- **SUM** - Calculating totals and revenue
+- **JOIN** - Table relationships (INNER JOIN, LEFT JOIN)
 - **LIKE** - Pattern matching for search
-- **Aggregate Functions** - Complex analytics
+- **CASE** - Conditional sorting for order priority
+- **LIMIT** - Limiting results (8 orders for public display)
+- **TRANSACTION** - Database transactions for data integrity
+- **Aggregate Functions** - Complex analytics and reporting
 
 ## 🔮 Future Improvements
 
-- [ ] Email notifications for order status changes
-- [ ] SMS notifications for pickup reminders
-- [ ] Payment gateway integration (Razorpay, Stripe)
-- [ ] Multi-restaurant support
-- [ ] Customer reviews and ratings
-- [ ] Advanced analytics dashboard
-- [ ] Mobile app (React Native/Flutter)
-- [ ] Loyalty program
+- [ ] Email notifications for low stock alerts
+- [ ] SMS notifications for order ready (customer)
+- [ ] Receipt printing integration
+- [ ] Table management and reservation system
+- [ ] Advanced analytics dashboard with charts
+- [ ] Mobile app for staff (React Native/Flutter)
+- [ ] Customer loyalty program
 - [ ] Promotional codes and discounts
-- [ ] Inventory management
-- [ ] Staff scheduling
-- [ ] QR code ordering
-- [ ] API for third-party integrations
+- [ ] Kitchen display screen with detailed order info
+- [ ] Multi-location restaurant support
+- [ ] API for third-party integrations (POS systems)
 
 ## 📄 License
 
@@ -389,6 +486,6 @@ For issues, questions, or suggestions:
 
 ---
 
-**PrePlate - Order Ahead. Pick Up Fresh.**
+**PrePlate - Restaurant Order, Kitchen & Sales Management System**
 
 Built with ❤️ using Flask, Bootstrap 5, and MySQL.
