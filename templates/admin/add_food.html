@@ -1,0 +1,72 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Add Food Item - PrePlate Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Add New Food Item</h2>
+    <a href="{{ url_for('admin_menu') }}" class="btn btn-outline-secondary">← Back to Menu</a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Food Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="price" class="form-label">Price (₹)</label>
+                            <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="stock_quantity" class="form-label">Stock Quantity</label>
+                            <input type="number" class="form-control" id="stock_quantity" name="stock_quantity" min="0" value="0">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="preparation_time" class="form-label">Prep Time (minutes)</label>
+                            <input type="number" class="form-control" id="preparation_time" name="preparation_time" min="0" value="0">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="category_id" class="form-label">Category</label>
+                        <select class="form-select" id="category_id" name="category_id" required>
+                            <option value="">Select Category</option>
+                            {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image Filename</label>
+                        <input type="text" class="form-control" id="image" name="image" placeholder="e.g., pizza_margherita.jpg">
+                        <small class="text-muted">Upload image to static/images/ folder and enter filename here</small>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="available" name="available" checked>
+                            <label class="form-check-label" for="available">
+                                Available for ordering
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Add Food Item</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

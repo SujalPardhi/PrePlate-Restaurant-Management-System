@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Kitchen Orders - PrePlate{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Kitchen Orders</h2>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+    </div>
+
+    <!-- Active Orders -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4 class="mb-4">Active Orders (Pending & Preparing)</h4>
+            
+            {% if active_orders %}
+            <div class="row">
+                {% for order in active_orders %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card kitchen-order-card {% if order.status == 'Pending' %}border-warning{% elif order.status == 'Preparing' %}border-primary{% endif %}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h5 class="card-title mb-1">Order #{{ order.id }}</h5>
+                                    <p class="text-muted mb-0">{{ order.customer_name }}</p>
+                                    <p class="text-muted small mb-0">
+                                        {% if order.table_number %}Table {{ order.table_number }}{% endif %}
+                                    </p>
+                                </div>
+                                <span class="badge 
+                                    {% if order.status == 'Pending' %}bg-warning
+                                    {% elif order.status == 'Preparing' %}bg-primary
+                                    {% endif %}">
+                                    {{ order.status }}
+                                </span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <p class="mb-1"><strong>Items ({{ order.item_count }}):</strong></p>
+                                <p class="text-muted small mb-0">
+                                    {% if order.estimated_preparation_time %}
+                                    Est. Prep Time: {{ order.estimated_preparation_time }} min
+                                    {% endif %}
+                                </p>
+                            </div>
+                            
+                            <a href="{{ url_for('order_details', order_id=order.id) }}" class="btn btn-sm btn-primary w-100">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted">No active orders in the kitchen.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Ready Orders -->
+    <div class="card">
+        <div class="card-body">
+            <h4 class="mb-4">Ready for Pickup</h4>
+            
+            {% if ready_orders %}
+            <div class="row">
+                {% for order in ready_orders %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card kitchen-order-card border-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h5 class="card-title mb-1">Order #{{ order.id }}</h5>
+                                    <p class="text-muted mb-0">{{ order.customer_name }}</p>
+                                    <p class="text-muted small mb-0">
+                                        {% if order.table_number %}Table {{ order.table_number }}{% endif %}
+                                    </p>
+                                </div>
+                                <span class="badge bg-success">Ready</span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <p class="mb-1"><strong>Items ({{ order.item_count }}):</strong></p>
+                            </div>
+                            
+                            <a href="{{ url_for('order_details', order_id=order.id) }}" class="btn btn-sm btn-success w-100">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted">No orders ready for pickup.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-refresh every 5 seconds for kitchen orders page
+setInterval(function() {
+    location.reload();
+}, 5000);
+</script>
+{% endblock %}

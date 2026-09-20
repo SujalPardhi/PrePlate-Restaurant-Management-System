@@ -1,0 +1,127 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Order #{{ order.id }} - PrePlate Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Order #{{ order.id }}</h2>
+    <a href="{{ url_for('admin_orders') }}" class="btn btn-outline-secondary">← Back to Orders</a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="mb-4">Order Information</h4>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Customer:</strong> {{ order.customer_name }}</p>
+                        <p class="mb-1"><strong>Table:</strong> {{ order.table_number or 'N/A' }}</p>
+                        <p class="mb-1"><strong>Order Time:</strong> {{ order.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Estimated Prep Time:</strong> {{ order.estimated_preparation_time }} minutes</p>
+                        <p class="mb-1"><strong>Current Status:</strong> 
+                            <span class="badge 
+                                {% if order.status == 'Pending' %}bg-warning
+                                {% elif order.status == 'Preparing' %}bg-primary
+                                {% elif order.status == 'Ready' %}bg-success
+                                {% elif order.status == 'Completed' %}bg-secondary
+                                {% elif order.status == 'Cancelled' %}bg-danger
+                                {% endif %}">
+                                {{ order.status }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                
+                <h5 class="mb-3">Order Items</h5>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Subtotal</th>
+                                <th>Prep Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order_items %}
+                            <tr>
+                                <td><strong>{{ item.food_name }}</strong></td>
+                                <td>{{ item.quantity }}</td>
+                                <td>₹{{ item.price }}</td>
+                                <td>₹{{ item.subtotal }}</td>
+                                <td>{{ item.preparation_time }} min</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>₹{{ order.subtotal }}</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <span class="fw-bold">Total</span>
+                        <span class="fw-bold fs-5">₹{{ order.total_amount }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="mb-4">Update Status</h4>
+                
+                <form method="POST" action="{{ url_for('update_order_status', order_id=order.id) }}">
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Order Status</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="Preparing" {% if order.status == 'Preparing' %}selected{% endif %}>Preparing</option>
+                            <option value="Ready" {% if order.status == 'Ready' %}selected{% endif %}>Ready</option>
+                            <option value="Completed" {% if order.status == 'Completed' %}selected{% endif %}>Completed</option>
+                            <option value="Cancelled" {% if order.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Update Status</button>
+                </form>
+                
+                <div class="mt-4">
+                    <h6 class="mb-3">Status Flow</h6>
+                    <div class="status-tracker">
+                        <div class="status-step {% if order.status in ['Pending', 'Preparing', 'Ready', 'Completed'] %}active{% endif %}">
+                            <div class="status-dot"></div>
+                            <div class="status-label">Pending</div>
+                        </div>
+                        <div class="status-line"></div>
+                        <div class="status-step {% if order.status in ['Preparing', 'Ready', 'Completed'] %}active{% endif %}">
+                            <div class="status-dot"></div>
+                            <div class="status-label">Preparing</div>
+                        </div>
+                        <div class="status-line"></div>
+                        <div class="status-step {% if order.status in ['Ready', 'Completed'] %}active{% endif %}">
+                            <div class="status-dot"></div>
+                            <div class="status-label">Ready</div>
+                        </div>
+                        <div class="status-line"></div>
+                        <div class="status-step {% if order.status == 'Completed' %}active{% endif %}">
+                            <div class="status-dot"></div>
+                            <div class="status-label">Completed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Order #{{ order.id }} - Kitchen - PrePlate{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Kitchen Order #{{ order.id }}</h2>
+        <a href="{{ url_for('kitchen_orders') }}" class="btn btn-outline-secondary">Back to Kitchen Orders</a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h4 class="mb-1">Order #{{ order.id }}</h4>
+                            <p class="text-muted mb-0">{{ order.customer_name }} {% if order.table_number %}| Table {{ order.table_number }}{% endif %}</p>
+                            <p class="text-muted small mb-0">Ordered: {{ order.created_at.strftime('%I:%M %p') }}</p>
+                        </div>
+                        <span class="badge 
+                            {% if order.status == 'Pending' %}bg-warning
+                            {% elif order.status == 'Preparing' %}bg-primary
+                            {% elif order.status == 'Ready' %}bg-success
+                            {% elif order.status == 'Completed' %}bg-secondary
+                            {% elif order.status == 'Cancelled' %}bg-danger
+                            {% endif %} fs-6">
+                            {{ order.status }}
+                        </span>
+                    </div>
+                    
+                    <h5 class="mb-3">Items to Prepare</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Quantity</th>
+                                    <th>Prep Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order_items %}
+                                <tr>
+                                    <td><strong>{{ item.food_name }}</strong></td>
+                                    <td class="text-center">{{ item.quantity }}</td>
+                                    <td class="text-center">{{ item.preparation_time }} min</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="alert alert-info mt-3">
+                        <strong>Total Estimated Prep Time:</strong> {{ order.estimated_preparation_time }} minutes
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="mb-4">Update Status</h4>
+                    
+                    <form method="POST" action="{{ url_for('update_order_status', order_id=order.id) }}">
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Order Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="Preparing" {% if order.status == 'Preparing' %}selected{% endif %}>Preparing</option>
+                                <option value="Ready" {% if order.status == 'Ready' %}selected{% endif %}>Ready</option>
+                                <option value="Completed" {% if order.status == 'Completed' %}selected{% endif %}>Completed</option>
+                                <option value="Cancelled" {% if order.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Update Status</button>
+                    </form>
+                    
+                    <div class="mt-4">
+                        <h6 class="mb-3">Status Flow</h6>
+                        <div class="status-tracker">
+                            <div class="status-step {% if order.status in ['Pending', 'Preparing', 'Ready', 'Completed'] %}active{% endif %}">
+                                <div class="status-dot"></div>
+                                <div class="status-label">Pending</div>
+                            </div>
+                            <div class="status-line"></div>
+                            <div class="status-step {% if order.status in ['Preparing', 'Ready', 'Completed'] %}active{% endif %}">
+                                <div class="status-dot"></div>
+                                <div class="status-label">Preparing</div>
+                            </div>
+                            <div class="status-line"></div>
+                            <div class="status-step {% if order.status in ['Ready', 'Completed'] %}active{% endif %}">
+                                <div class="status-dot"></div>
+                                <div class="status-label">Ready</div>
+                            </div>
+                            <div class="status-line"></div>
+                            <div class="status-step {% if order.status == 'Completed' %}active{% endif %}">
+                                <div class="status-dot"></div>
+                                <div class="status-label">Completed</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

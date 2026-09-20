@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Reception Dashboard - PrePlate{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Reception Dashboard</h2>
+        <a href="{{ url_for('new_order') }}" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle"></i> New Order
+        </a>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card bg-warning text-dark">
+                <div class="card-body">
+                    <h6 class="text-uppercase mb-2">Pending Orders</h6>
+                    <h3 class="mb-0" data-stat="pending_orders">{{ pending_orders }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card bg-success text-white">
+                <div class="card-body">
+                    <h6 class="text-uppercase mb-2">Ready Orders</h6>
+                    <h3 class="mb-0" data-stat="ready_orders">{{ ready_orders }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card bg-info text-white">
+                <div class="card-body">
+                    <h6 class="text-uppercase mb-2">Completed Today</h6>
+                    <h3 class="mb-0" data-stat="completed_today">{{ completed_today }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card bg-primary text-white">
+                <div class="card-body">
+                    <h6 class="text-uppercase mb-2">Today's Sales</h6>
+                    <h3 class="mb-0" data-stat="today_sales">₹{{ today_sales }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="mb-0">Recent Orders</h4>
+                <a href="{{ url_for('reception_orders') }}" class="btn btn-sm btn-outline-primary">View All Orders</a>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Table</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in recent_orders %}
+                        <tr>
+                            <td><strong>#{{ order.id }}</strong></td>
+                            <td>{{ order.customer_name }}</td>
+                            <td>{{ order.table_number or '-' }}</td>
+                            <td>{{ order.item_count }} item{{ 's' if order.item_count != 1 else '' }}</td>
+                            <td>₹{{ order.total_amount }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if order.status == 'Pending' %}bg-warning
+                                    {% elif order.status == 'Preparing' %}bg-primary
+                                    {% elif order.status == 'Ready' %}bg-success
+                                    {% elif order.status == 'Completed' %}bg-secondary
+                                    {% elif order.status == 'Cancelled' %}bg-danger
+                                    {% endif %}">
+                                    {{ order.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('order_details', order_id=order.id) }}" class="btn btn-sm btn-outline-primary">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-refresh every 5 seconds for reception dashboard
+setInterval(function() {
+    location.reload();
+}, 5000);
+</script>
+{% endblock %}

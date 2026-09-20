@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Kitchen Dashboard - PrePlate{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Kitchen Dashboard</h2>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card stat-card bg-warning text-dark">
+                <div class="card-body">
+                    <h6 class="text-uppercase mb-2">Pending Orders</h6>
+                    <h3 class="mb-0" data-stat="pending_orders">{{ pending_orders }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card stat-card bg-primary text-white">
+                <div class="card-body">
+                    <h6 class="text-uppercase mb-2">Preparing</h6>
+                    <h3 class="mb-0" data-stat="preparing_orders">{{ preparing_orders }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card stat-card bg-success text-white">
+                <div class="card-body">
+                    <h6 class="text-uppercase mb-2">Ready for Pickup</h6>
+                    <h3 class="mb-0" data-stat="ready_orders">{{ ready_orders }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kitchen Orders -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">Active Kitchen Orders</h4>
+                        <a href="{{ url_for('kitchen_orders') }}" class="btn btn-sm btn-outline-primary">View All Orders</a>
+                    </div>
+                    
+                    {% if kitchen_orders %}
+                    <div class="row">
+                        {% for order in kitchen_orders %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card kitchen-order-card {% if order.status == 'Pending' %}border-warning{% elif order.status == 'Preparing' %}border-primary{% endif %}">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <h5 class="card-title mb-1">Order #{{ order.id }}</h5>
+                                            <p class="text-muted mb-0">{{ order.customer_name }}</p>
+                                            <p class="text-muted small mb-0">
+                                                {% if order.table_number %}Table {{ order.table_number }}{% endif %}
+                                            </p>
+                                        </div>
+                                        <span class="badge 
+                                            {% if order.status == 'Pending' %}bg-warning
+                                            {% elif order.status == 'Preparing' %}bg-primary
+                                            {% endif %}">
+                                            {{ order.status }}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <p class="mb-1"><strong>Items ({{ order.item_count }}):</strong></p>
+                                        <p class="text-muted small mb-0">
+                                            {% if order.estimated_preparation_time %}
+                                            Est. Prep Time: {{ order.estimated_preparation_time }} min
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    
+                                    <a href="{{ url_for('order_details', order_id=order.id) }}" class="btn btn-sm btn-primary w-100">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <p class="text-muted">No active orders in the kitchen.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-refresh every 5 seconds for kitchen dashboard
+setInterval(function() {
+    location.reload();
+}, 5000);
+</script>
+{% endblock %}

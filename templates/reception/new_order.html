@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}New Order - PrePlate{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Create New Order</h2>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="mb-4">Customer Information</h4>
+                    <form method="POST" action="{{ url_for('create_order') }}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="customer_name" class="form-label">Customer Name *</label>
+                                <input type="text" class="form-control" id="customer_name" name="customer_name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="table_number" class="form-label">Table Number</label>
+                                <input type="text" class="form-control" id="table_number" name="table_number">
+                            </div>
+                        </div>
+                        
+                        <h4 class="mb-4 mt-4">Select Items</h4>
+                        
+                        <!-- Search and Filter -->
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-2">
+                                <input type="text" class="form-control" id="search_items" placeholder="🔍 Search food items...">
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <select class="form-select" id="category_filter">
+                                    <option value="">All Categories</option>
+                                    {% for category in categories %}
+                                    <option value="{{ category.name }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Selected Items Summary -->
+                        <div class="alert alert-info mb-3" id="selected_summary">
+                            <strong>Selected Items:</strong> <span id="selected_count">0</span> items | 
+                            <strong>Total:</strong> ₹<span id="selected_total">0.00</span>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="food_items_table">
+                                <thead>
+                                    <tr>
+                                        <th width="50">Add</th>
+                                        <th>Item</th>
+                                        <th>Price</th>
+                                        <th>Stock</th>
+                                        <th>Prep Time</th>
+                                        <th width="100">Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in food_items %}
+                                    <tr class="food-item-row" data-category="{{ item.category_name }}" data-name="{{ item.name|lower }}">
+                                        <td>
+                                            <input type="checkbox" class="form-check-input item-checkbox" name="items" value="{{ item.id }}">
+                                        </td>
+                                        <td>
+                                            <strong>{{ item.name }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ item.category_name }}</small>
+                                        </td>
+                                        <td>₹{{ item.price }}</td>
+                                        <td>
+                                            <span class="badge {% if item.stock_quantity > 5 %}bg-success{% elif item.stock_quantity > 0 %}bg-warning{% else %}bg-danger{% endif %}">
+                                                {{ item.stock_quantity }}
+                                            </span>
+                                        </td>
+                                        <td>{{ item.preparation_time }} min</td>
+                                        <td>
+                                            <input type="number" class="form-control form-control-sm quantity-input" 
+                                                   name="quantities" value="1" min="1" max="{{ item.stock_quantity }}" disabled
+                                                   data-price="{{ item.price }}">
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="alert alert-info mt-3">
+                            <strong>Tip:</strong> Check items to add them to the order, then adjust quantities.
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Create Order</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="mb-4">Quick Actions</h4>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-primary" onclick="selectAllItems()">Select All Available</button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="clearSelection()">Clear Selection</button>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h5 class="mb-3">Categories</h5>
+                    <div class="list-group">
+                        {% for category in categories %}
+                        <a href="#category-{{ category.id }}" class="list-group-item list-group-item-action">
+                            {{ category.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+// Search functionality
+document.getElementById('search_items').addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const rows = document.querySelectorAll('.food-item-row');
+    
+    rows.forEach(row => {
+        const itemName = row.dataset.name;
+        if (itemName.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+
+// Category filter
+document.getElementById('category_filter').addEventListener('change', function() {
+    const category = this.value;
+    const rows = document.querySelectorAll('.food-item-row');
+    
+    rows.forEach(row => {
+        if (category === '' || row.dataset.category === category) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+
+// Enable quantity input when checkbox is checked
+document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        const quantityInput = this.closest('tr').querySelector('.quantity-input');
+        quantityInput.disabled = !this.checked;
+        updateSelectedSummary();
+    });
+});
+
+// Update quantity and recalculate total
+document.querySelectorAll('.quantity-input').forEach(input => {
+    input.addEventListener('change', updateSelectedSummary);
+});
+
+function updateSelectedSummary() {
+    let selectedCount = 0;
+    let total = 0;
+    
+    document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
+        const row = checkbox.closest('tr');
+        const quantity = parseInt(row.querySelector('.quantity-input').value) || 0;
+        const price = parseFloat(row.querySelector('.quantity-input').dataset.price);
+        
+        selectedCount += quantity;
+        total += price * quantity;
+    });
+    
+    document.getElementById('selected_count').textContent = selectedCount;
+    document.getElementById('selected_total').textContent = total.toFixed(2);
+}
+
+function selectAllItems() {
+    document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+        if (!checkbox.disabled) {
+            checkbox.checked = true;
+            const quantityInput = checkbox.closest('tr').querySelector('.quantity-input');
+            quantityInput.disabled = false;
+        }
+    });
+    updateSelectedSummary();
+}
+
+function clearSelection() {
+    document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+        const quantityInput = checkbox.closest('tr').querySelector('.quantity-input');
+        quantityInput.disabled = true;
+    });
+    updateSelectedSummary();
+}
+</script>
+{% endblock %}
+{% endblock %}

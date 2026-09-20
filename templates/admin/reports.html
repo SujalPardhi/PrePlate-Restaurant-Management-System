@@ -1,0 +1,152 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Reports - PrePlate Admin{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Reports & Analytics</h2>
+
+<!-- Today's Statistics -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h6 class="text-muted mb-2">Today's Orders</h6>
+                <h3 class="mb-0">{{ today_orders }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h6 class="text-muted mb-2">Today's Sales</h6>
+                <h3 class="mb-0 text-success">₹{{ today_sales }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h6 class="text-muted mb-2">Completed Today</h6>
+                <h3 class="mb-0 text-secondary">{{ completed_today }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h6 class="text-muted mb-2">Cancelled Today</h6>
+                <h3 class="mb-0 text-danger">{{ cancelled_today }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="mb-4">Orders by Status</h4>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Count</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set total_orders = orders_by_status|sum(attribute='count') %}
+                            {% for status in orders_by_status %}
+                            <tr>
+                                <td>
+                                    <span class="badge 
+                                        {% if status.status == 'Pending' %}bg-warning
+                                        {% elif status.status == 'Preparing' %}bg-primary
+                                        {% elif status.status == 'Ready' %}bg-success
+                                        {% elif status.status == 'Completed' %}bg-secondary
+                                        {% elif status.status == 'Cancelled' %}bg-danger
+                                        {% endif %}">
+                                        {{ status.status }}
+                                    </span>
+                                </td>
+                                <td>{{ status.count }}</td>
+                                <td>
+                                    {% if total_orders > 0 %}
+                                    {{ ((status.count / total_orders) * 100)|round(1) }}%
+                                    {% else %}
+                                    0%
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="mb-4">Most Popular Items</h4>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Food Item</th>
+                                <th>Quantity Sold</th>
+                                <th>Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in popular_items %}
+                            <tr>
+                                <td><strong>{{ item.name }}</strong></td>
+                                <td>{{ item.total_quantity }}</td>
+                                <td>₹{{ item.total_revenue }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="mb-4">Daily Sales Trend (Last 30 Days)</h4>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Total Orders</th>
+                                <th>Completed</th>
+                                <th>Items Sold</th>
+                                <th>Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for day in daily_sales %}
+                            <tr>
+                                <td>{{ day.sale_date.strftime('%B %d, %Y') }}</td>
+                                <td>{{ day.total_orders }}</td>
+                                <td>{{ day.completed_orders }}</td>
+                                <td>{{ day.items_sold }}</td>
+                                <td>₹{{ day.total_revenue }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

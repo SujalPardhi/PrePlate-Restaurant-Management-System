@@ -1,0 +1,459 @@
+/* PrePlate - Restaurant Management System */
+
+/* Global Styles */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --border-color: #dee2e6;
+    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f4f6f9;
+    color: #212529;
+    line-height: 1.6;
+}
+
+/* Status Tracker */
+.status-tracker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+}
+
+.status-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.status-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--border-color);
+    border: 3px solid var(--border-color);
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.status-step.active .status-dot {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.status-label {
+    font-size: 0.75rem;
+    color: var(--secondary-color);
+    text-align: center;
+}
+
+.status-step.active .status-label {
+    color: var(--dark-color);
+    font-weight: 600;
+}
+
+.status-line {
+    flex: 1;
+    height: 3px;
+    background-color: var(--border-color);
+    margin: 0 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.status-step.active + .status-line {
+    background-color: var(--success-color);
+}
+
+/* Admin Dashboard Cards */
+.stat-card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+}
+
+.stat-card .card-body {
+    padding: 1.5rem;
+}
+
+.stat-card h6 {
+    font-weight: 500;
+    color: var(--secondary-color);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-card h3 {
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+/* Kitchen Order Cards */
+.kitchen-order-card {
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.kitchen-card:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+}
+
+.kitchen-order-card.border-warning {
+    border-color: var(--warning-color);
+}
+
+.kitchen-order-card.border-primary {
+    border-color: var(--primary-color);
+}
+
+.kitchen-order-card.border-success {
+    border-color: var(--success-color);
+}
+
+/* Order Display Cards for Public Dashboard */
+.order-display-card {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    min-height: 180px;
+}
+
+.order-display-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+}
+
+.order-display-card.border-warning {
+    border: 3px solid var(--warning-color);
+    background-color: #fff9e6;
+}
+
+.order-display-card.border-primary {
+    border: 3px solid var(--primary-color);
+    background-color: #e7f1ff;
+}
+
+.order-display-card.border-success {
+    border: 3px solid var(--success-color);
+    background-color: #d1e7dd;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #ffffff;
+    border-right: 1px solid var(--border-color);
+    min-height: 100vh;
+}
+
+.sidebar .nav-link {
+    color: var(--dark-color);
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    margin-bottom: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover {
+    background-color: var(--light-color);
+    color: var(--primary-color);
+}
+
+.sidebar .nav-link.active {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+/* Tables */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table thead th {
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 600;
+    color: var(--dark-color);
+    background-color: var(--light-color);
+}
+
+.table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: var(--light-color);
+}
+
+/* Forms */
+.form-control, .form-select {
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    padding: 0.625rem 0.875rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 6px;
+    padding: 0.625rem 1.25rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* Cards */
+.card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 6px;
+    border: none;
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: var(--shadow-sm);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #ffffff;
+}
+
+/* Footer */
+footer {
+    background-color: var(--light-color);
+    border-top: 1px solid var(--border-color);
+}
+
+footer h5 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+footer a {
+    color: var(--secondary-color);
+    transition: color 0.2s ease;
+}
+
+footer a:hover {
+    color: var(--primary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .status-tracker {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .status-line {
+        display: none;
+    }
+    
+    .status-step {
+        flex-direction: row;
+        margin-bottom: 0.5rem;
+    }
+    
+    .status-dot {
+        margin-bottom: 0;
+        margin-right: 0.5rem;
+    }
+    
+    .sidebar {
+        position: fixed;
+        z-index: 1000;
+        left: -250px;
+        transition: left 0.3s ease;
+    }
+    
+    .sidebar.show {
+        left: 0;
+    }
+}
+
+/* Large Display Styles for Restaurant Screens */
+@media (min-width: 1400px) {
+    .order-display-card .card-body h4 {
+        font-size: 1.5rem;
+    }
+    
+    .order-display-card .badge {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    .stat-card h3 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Utility Classes */
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.text-success {
+    color: var(--success-color) !important;
+}
+
+.text-danger {
+    color: var(--danger-color) !important;
+}
+
+.text-warning {
+    color: var(--warning-color) !important;
+}
+
+.text-info {
+    color: var(--info-color) !important;
+}
+
+.text-muted {
+    color: var(--secondary-color) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.bg-success {
+    background-color: var(--success-color) !important;
+}
+
+.bg-danger {
+    background-color: var(--danger-color) !important;
+}
+
+.bg-warning {
+    background-color: var(--warning-color) !important;
+}
+
+.bg-info {
+    background-color: var(--info-color) !important;
+}
+
+.bg-light {
+    background-color: var(--light-color) !important;
+}
+
+.bg-white {
+    background-color: #ffffff !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Loading Spinner */
+.spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-color);
+}
+
+/* Print Styles */
+@media print {
+    .navbar,
+    .sidebar,
+    footer,
+    .btn,
+    .no-print {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+}
