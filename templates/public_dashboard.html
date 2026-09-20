@@ -7,36 +7,13 @@
     <div class="row">
         <div class="col-12">
             <!-- Header -->
-            <div class="text-center mb-4">
+            <div class="text-center mb-3">
                 <h1 class="display-4 fw-bold"><span class="text-primary">Pre</span>Plate</h1>
-                <p class="lead text-muted">Order Status Display</p>
-            </div>
-            
-            <!-- Statistics -->
-            <div class="row mb-4">
-                <div class="col-md-6 mb-3">
-                    <div class="card stat-card bg-primary text-white">
-                        <div class="card-body text-center">
-                            <h6 class="text-uppercase mb-2">Today's Orders</h6>
-                            <h3 class="mb-0">{{ today_orders }}</h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card stat-card bg-success text-white">
-                        <div class="card-body text-center">
-                            <h6 class="text-uppercase mb-2">Completed Today</h6>
-                            <h3 class="mb-0">{{ completed_today }}</h3>
-                        </div>
-                    </div>
-                </div>
             </div>
             
             <!-- Active Orders Display -->
             <div class="card">
                 <div class="card-body">
-                    <h3 class="text-center mb-3">Active Orders</h3>
-                    
                     {% if active_orders %}
                     <div class="row" style="display: flex; flex-wrap: wrap;">
                         {% for order in active_orders[:8] %}

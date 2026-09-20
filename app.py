@@ -80,19 +80,10 @@ def public_dashboard():
         """)
         active_orders = cursor.fetchall()
         
-        # Get today's statistics
-        today = date.today()
-        cursor.execute("SELECT COUNT(*) as count FROM orders WHERE DATE(created_at) = %s", (today,))
-        today_orders = cursor.fetchone()['count']
-        
-        cursor.execute("SELECT COUNT(*) as count FROM orders WHERE status = 'Completed' AND DATE(created_at) = %s", (today,))
-        completed_today = cursor.fetchone()['count']
-        
         cursor.close()
         conn.close()
         
-        return render_template('public_dashboard.html', active_orders=active_orders, 
-                             today_orders=today_orders, completed_today=completed_today)
+        return render_template('public_dashboard.html', active_orders=active_orders)
     
     flash('Database connection error. Please try again later.', 'danger')
     return render_template('login.html')

@@ -3,119 +3,227 @@
 {% block title %}Dashboard - PrePlate Admin{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Admin Dashboard</h2>
+<div class="container-fluid py-4" id="mainDashboard">
+    <div class="d-flex justify-content-between align-items-center mb-4" id="headerSection">
+        <h2>Admin Dashboard</h2>
+        <button id="fullscreenBtn" class="btn btn-primary" onclick="toggleFullscreen()">
+            <span id="fullscreenIcon">⛶</span> Full Screen
+        </button>
+    </div>
 
-<!-- Statistics Cards -->
-<div class="row mb-4">
-    <div class="col-md-3 mb-3">
-        <div class="card stat-card">
-            <div class="card-body">
-                <h6 class="text-muted mb-2">Today's Orders</h6>
-                <h3 class="mb-0" data-stat="today_orders">{{ today_orders }}</h3>
+    <!-- Statistics Cards (hidden in full-screen) -->
+    <div class="row mb-4" id="statsSection">
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Today's Orders</h6>
+                    <h3 class="mb-0" data-stat="today_orders">{{ today_orders }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Pending Orders</h6>
+                    <h3 class="mb-0 text-warning" data-stat="pending_orders">{{ pending_orders }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Preparing</h6>
+                    <h3 class="mb-0 text-primary" data-stat="preparing_orders">{{ preparing_orders }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Ready</h6>
+                    <h3 class="mb-0 text-success" data-stat="ready_orders">{{ ready_orders }}</h3>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3 mb-3">
-        <div class="card stat-card">
-            <div class="card-body">
-                <h6 class="text-muted mb-2">Pending Orders</h6>
-                <h3 class="mb-0 text-warning" data-stat="pending_orders">{{ pending_orders }}</h3>
+
+    <div class="row mb-4" id="statsSection2">
+        <div class="col-md-4 mb-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Completed Today</h6>
+                    <h3 class="mb-0 text-secondary" data-stat="completed_orders">{{ completed_orders }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Today's Sales</h6>
+                    <h3 class="mb-0 text-success" data-stat="today_sales">₹{{ today_sales }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Total Stock</h6>
+                    <h3 class="mb-0 text-info" data-stat="total_stock">{{ total_stock }}</h3>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3 mb-3">
-        <div class="card stat-card">
-            <div class="card-body">
-                <h6 class="text-muted mb-2">Preparing</h6>
-                <h3 class="mb-0 text-primary" data-stat="preparing_orders">{{ preparing_orders }}</h3>
+
+    <!-- Live Orders Display (for restaurant TV screen) -->
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4" id="ordersHeader">
+                <h4 class="mb-0">📺 Live Orders</h4>
+                <a href="{{ url_for('admin_orders') }}" class="btn btn-sm btn-outline-primary">View All Orders</a>
             </div>
-        </div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="card stat-card">
-            <div class="card-body">
-                <h6 class="text-muted mb-2">Ready</h6>
-                <h3 class="mb-0 text-success" data-stat="ready_orders">{{ ready_orders }}</h3>
+            
+            {% if recent_orders %}
+            <div class="row g-3">
+                {% for order in recent_orders[:8] %}
+                <div class="col-md-6 col-lg-3">
+                    <div class="card order-display-card h-100 {% if order.status == 'Pending' %}border-warning border-2{% elif order.status == 'Preparing' %}border-primary border-2{% elif order.status == 'Ready' %}border-success border-2 bg-success bg-opacity-10{% elif order.status == 'Completed' %}border-secondary border-2{% endif %}">
+                        <div class="card-body p-2 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-0">Order #{{ order.id }}</h6>
+                                    <p class="text-muted mb-0 small">{{ order.customer_name }}</p>
+                                    <p class="text-muted small mb-0">
+                                        {% if order.table_number %}Table {{ order.table_number }}{% endif %}
+                                    </p>
+                                </div>
+                                <span class="badge 
+                                    {% if order.status == 'Pending' %}bg-warning
+                                    {% elif order.status == 'Preparing' %}bg-primary
+                                    {% elif order.status == 'Ready' %}bg-success
+                                    {% elif order.status == 'Completed' %}bg-secondary
+                                    {% endif %}">
+                                    {{ order.status }}
+                                </span>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <p class="mb-0 small"><strong>Items:</strong> {{ order.item_count }}</p>
+                                <p class="text-muted small mb-0">Total: ₹{{ order.total_amount }}</p>
+                            </div>
+                            
+                            {% if order.status == 'Ready' %}
+                            <div class="alert alert-success text-center mb-2 py-1 px-1">
+                                <strong>🎉 Ready!</strong>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="mt-auto text-center">
+                                <p class="small text-muted mb-0">{{ order.created_at.strftime('%I:%M %p') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
+            {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted">No recent orders.</p>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
 
-<div class="row mb-4">
-    <div class="col-md-4 mb-3">
-        <div class="card stat-card">
-            <div class="card-body">
-                <h6 class="text-muted mb-2">Completed Today</h6>
-                <h3 class="mb-0 text-secondary" data-stat="completed_orders">{{ completed_orders }}</h3>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card stat-card">
-            <div class="card-body">
-                <h6 class="text-muted mb-2">Today's Sales</h6>
-                <h3 class="mb-0 text-success" data-stat="today_sales">₹{{ today_sales }}</h3>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card stat-card">
-            <div class="card-body">
-                <h6 class="text-muted mb-2">Total Stock</h6>
-                <h3 class="mb-0 text-info" data-stat="total_stock">{{ total_stock }}</h3>
-            </div>
-        </div>
-    </div>
-</div>
+<style>
+.order-display-card {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
 
-<!-- Recent Orders -->
-<div class="card">
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="mb-0">Recent Orders</h4>
-            <a href="{{ url_for('admin_orders') }}" class="btn btn-sm btn-outline-primary">View All Orders</a>
-        </div>
-        
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Customer</th>
-                        <th>Table</th>
-                        <th>Items</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order in recent_orders %}
-                    <tr>
-                        <td><strong>#{{ order.id }}</strong></td>
-                        <td>{{ order.customer_name }}</td>
-                        <td>{{ order.table_number or '-' }}</td>
-                        <td>{{ order.item_count }} item{{ 's' if order.item_count != 1 else '' }}</td>
-                        <td>₹{{ order.total_amount }}</td>
-                        <td>
-                            <span class="badge 
-                                {% if order.status == 'Pending' %}bg-warning
-                                {% elif order.status == 'Preparing' %}bg-primary
-                                {% elif order.status == 'Ready' %}bg-success
-                                {% elif order.status == 'Completed' %}bg-secondary
-                                {% elif order.status == 'Cancelled' %}bg-danger
-                                {% endif %}">
-                                {{ order.status }}
-                            </span>
-                        </td>
-                        <td>
-                            <a href="{{ url_for('order_details', order_id=order.id) }}" class="btn btn-sm btn-outline-primary">View</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+.order-display-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.order-display-card.border-success {
+    background: linear-gradient(135deg, #d1e7dd 0%, #b8e3c8 100%);
+}
+
+/* Pulse animation for ready orders */
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(25, 135, 84, 0);
+    }
+}
+
+.order-display-card.border-success {
+    animation: pulse 2s infinite;
+}
+
+/* Full-screen mode styles */
+.fullscreen-mode #headerSection,
+.fullscreen-mode #statsSection,
+.fullscreen-mode #statsSection2,
+.fullscreen-mode #ordersHeader {
+    display: none !important;
+}
+
+.fullscreen-mode {
+    padding: 0 !important;
+}
+
+.fullscreen-mode .container-fluid {
+    padding: 0 !important;
+}
+
+.fullscreen-mode .card {
+    border: none !important;
+    border-radius: 0 !important;
+    height: 100vh !important;
+}
+
+.fullscreen-mode .card-body {
+    padding: 20px !important;
+}
+</style>
+
+<script>
+let isFullscreen = false;
+
+// Full-screen toggle
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        isFullscreen = true;
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+            isFullscreen = false;
+        }
+    }
+}
+
+// Listen for fullscreen change
+document.addEventListener('fullscreenchange', function() {
+    const icon = document.getElementById('fullscreenIcon');
+    const dashboard = document.getElementById('mainDashboard');
+    
+    if (document.fullscreenElement) {
+        isFullscreen = true;
+        icon.textContent = '⛶';
+        dashboard.classList.add('fullscreen-mode');
+    } else {
+        isFullscreen = false;
+        icon.textContent = '⛶';
+        dashboard.classList.remove('fullscreen-mode');
+    }
+});
+
+// Auto-refresh every 5 seconds for live updates
+setInterval(function() {
+    location.reload();
+}, 5000);
+</script>
 {% endblock %}

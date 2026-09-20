@@ -79,13 +79,14 @@ body {
 /* Admin Dashboard Cards */
 .stat-card {
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    transition: all 0.2s ease;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: white;
 }
 
 .stat-card:hover {
     box-shadow: var(--shadow);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
 }
 
 .stat-card .card-body {
@@ -98,23 +99,26 @@ body {
     font-size: 0.875rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
 }
 
 .stat-card h3 {
     font-weight: 700;
     margin-bottom: 0;
+    font-size: 2rem;
 }
 
 /* Kitchen Order Cards */
 .kitchen-order-card {
     border: 2px solid var(--border-color);
-    border-radius: 8px;
-    transition: all 0.2s ease;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: white;
 }
 
-.kitchen-card:hover {
+.kitchen-order-card:hover {
     box-shadow: var(--shadow);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
 }
 
 .kitchen-order-card.border-warning {
@@ -133,7 +137,7 @@ body {
 .order-display-card {
     border-radius: 12px;
     transition: all 0.3s ease;
-    min-height: 180px;
+    background: white;
 }
 
 .order-display-card:hover {
@@ -142,18 +146,18 @@ body {
 }
 
 .order-display-card.border-warning {
-    border: 3px solid var(--warning-color);
+    border: 2px solid var(--warning-color);
     background-color: #fff9e6;
 }
 
 .order-display-card.border-primary {
-    border: 3px solid var(--primary-color);
+    border: 2px solid var(--primary-color);
     background-color: #e7f1ff;
 }
 
 .order-display-card.border-success {
-    border: 3px solid var(--success-color);
-    background-color: #d1e7dd;
+    border: 2px solid var(--success-color);
+    background: linear-gradient(135deg, #d1e7dd 0%, #b8e3c8 100%);
 }
 
 /* Sidebar */
@@ -166,7 +170,7 @@ body {
 .sidebar .nav-link {
     color: var(--dark-color);
     padding: 0.75rem 1rem;
-    border-radius: 4px;
+    border-radius: 8px;
     margin-bottom: 0.25rem;
     transition: all 0.2s ease;
 }
@@ -192,6 +196,12 @@ body {
     font-weight: 600;
     color: var(--dark-color);
     background-color: var(--light-color);
+    padding: 1rem;
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
 }
 
 .table tbody tr {
@@ -204,9 +214,9 @@ body {
 
 /* Forms */
 .form-control, .form-select {
-    border-radius: 6px;
+    border-radius: 8px;
     border: 1px solid var(--border-color);
-    padding: 0.625rem 0.875rem;
+    padding: 0.75rem 1rem;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -215,16 +225,22 @@ body {
     box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
 /* Buttons */
 .btn {
-    border-radius: 6px;
-    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
     font-weight: 500;
     transition: all 0.2s ease;
 }
 
 .btn:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-primary {
@@ -237,12 +253,18 @@ body {
     border-color: #0a58ca;
 }
 
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
 /* Cards */
 .card {
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 12px;
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.2s ease;
+    background: white;
 }
 
 .card:hover {
@@ -253,41 +275,81 @@ body {
     padding: 1.5rem;
 }
 
+.card-header {
+    background-color: var(--light-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+}
+
+.card-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
 /* Alerts */
 .alert {
-    border-radius: 6px;
+    border-radius: 8px;
     border: none;
+    padding: 1rem 1.5rem;
 }
 
 /* Navbar */
 .navbar {
     box-shadow: var(--shadow-sm);
+    padding: 0.75rem 0;
 }
 
 .navbar-brand {
     font-weight: 700;
     font-size: 1.5rem;
+    letter-spacing: -0.5px;
 }
 
 .navbar-dark .navbar-nav .nav-link {
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.9);
     font-weight: 500;
-    transition: color 0.2s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover {
     color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.dropdown-menu {
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--light-color);
 }
 
 /* Footer */
 footer {
     background-color: var(--light-color);
     border-top: 1px solid var(--border-color);
+    padding: 1.5rem 0;
 }
 
 footer h5 {
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
 }
 
 footer a {
@@ -329,6 +391,10 @@ footer a:hover {
     
     .sidebar.show {
         left: 0;
+    }
+    
+    .stat-card h3 {
+        font-size: 1.75rem;
     }
 }
 
@@ -456,4 +522,44 @@ footer a:hover {
         box-shadow: none;
         border: 1px solid #000;
     }
+}
+
+/* Pulse animation for ready orders */
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(25, 135, 84, 0);
+    }
+}
+
+.order-display-card.border-success {
+    animation: pulse 2s infinite;
+}
+
+/* Full-screen mode styles */
+.fullscreen-mode #headerSection,
+.fullscreen-mode #statsSection,
+.fullscreen-mode #statsSection2,
+.fullscreen-mode #ordersHeader {
+    display: none !important;
+}
+
+.fullscreen-mode {
+    padding: 0 !important;
+}
+
+.fullscreen-mode .container-fluid {
+    padding: 0 !important;
+}
+
+.fullscreen-mode .card {
+    border: none !important;
+    border-radius: 0 !important;
+    height: 100vh !important;
+}
+
+.fullscreen-mode .card-body {
+    padding: 20px !important;
 }
